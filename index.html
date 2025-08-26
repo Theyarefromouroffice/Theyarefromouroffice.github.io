@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>โปรไฟล์ของ อภิวิชญ์ | Touhou Style</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            /* Touhou-inspired background - celestial/magical feel */
+            background: linear-gradient(135deg, #1a2a6c 0%, #b21f1f 50%, #fdbb2d 100%); /* Deep blues, reds, and golden hues */
+            background-size: cover;
+            background-attachment: fixed;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .profile-card {
+            background-color: rgba(255, 255, 255, 0.95); /* Slightly transparent white for a dreamy effect */
+            backdrop-filter: blur(10px); /* Frosted glass effect */
+            border: 2px solid rgba(255, 255, 255, 0.7); /* Lighter border */
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3); /* Softer shadow */
+        }
+        .profile-image {
+            border: 3px solid #6a0dad; /* Purple border for magic touch */
+            box-shadow: 0 0 15px rgba(106, 13, 173, 0.6); /* Glowing effect */
+        }
+        .gradient-text {
+            background: linear-gradient(45deg, #8a2be2, #da70d6); /* Violet to Orchid gradient */
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        /* Custom Touhou-like button style for interactive elements if any were added */
+        .touhou-button {
+            background: linear-gradient(to right, #6a0dad, #9370db);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 9999px; /* Fully rounded */
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(106, 13, 173, 0.4);
+        }
+        .touhou-button:hover {
+            background: linear-gradient(to right, #9370db, #6a0dad);
+            box-shadow: 0 6px 20px rgba(106, 13, 173, 0.6);
+            transform: translateY(-2px);
+        }
+        /* Icons styling */
+        .icon {
+            color: #6a0dad; /* Touhou purple */
+        }
+    </style>
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" xintegrity="sha512-Fo3rlrZj/k7ujTnHg4CGR2D7kSs0v4LLanw2qksYuRlEzO+tcaEPQogQ0KaoIF2ra/uLZtl5F5D+QpU/t/L3gQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body class="p-4 sm:p-6 md:p-8">
+    <div class="profile-card max-w-lg w-full p-6 sm:p-8 md:p-10 rounded-3xl flex flex-col items-center text-center space-y-6">
+        <!-- Profile Image -->
+        <div class="relative">
+            <img src="https://placehold.co/150x150/8a2be2/ffffff?text=อภิวิชญ์" alt="รูปโปรไฟล์ อภิวิชญ์" class="profile-image w-32 h-32 rounded-full object-cover">
+            <span class="absolute bottom-0 right-0 bg-green-500 rounded-full w-6 h-6 flex items-center justify-center text-white text-xs font-bold border-2 border-white">
+                <i class="fas fa-magic"></i> <!-- Little magic icon for Touhou touch -->
+            </span>
+        </div>
+
+        <!-- Name and Nickname -->
+        <div>
+            <h1 class="text-4xl sm:text-5xl font-extrabold gradient-text leading-tight">อภิวิชญ์ ยันจะโปะ</h1>
+            <p class="text-xl sm:text-2xl text-gray-700 mt-1">ชื่อเล่น: <span class="font-semibold text-purple-700">ภูมิ</span></p>
+        </div>
+
+        <!-- Section Separator -->
+        <div class="w-24 h-1 bg-purple-300 rounded-full my-4"></div>
+
+        <!-- Interests -->
+        <div class="space-y-3 w-full">
+            <h2 class="text-2xl sm:text-3xl font-bold text-gray-800 flex items-center justify-center">
+                <i class="icon fas fa-star mr-3"></i>ความสนใจ
+            </h2>
+            <ul class="text-lg sm:text-xl text-gray-700 space-y-2">
+                <li class="flex items-center justify-center"><i class="icon fas fa-notes-medical mr-2"></i>การแพทย์</li>
+                <li class="flex items-center justify-center"><i class="icon fas fa-comments mr-2"></i>ชอบพูดอังกฤษ</li>
+                <li class="flex items-center justify-center"><i class="icon fas fa-gamepad mr-2"></i>เล่นเกม</li>
+            </ul>
+        </div>
+
+        <!-- Section Separator -->
+        <div class="w-24 h-1 bg-purple-300 rounded-full my-4"></div>
+
+        <!-- Education -->
+        <div class="space-y-3 w-full">
+            <h2 class="text-2xl sm:text-3xl font-bold text-gray-800 flex items-center justify-center">
+                <i class="icon fas fa-hat-wizard mr-3"></i>การศึกษา
+            </h2>
+            <p class="text-lg sm:text-xl text-gray-700 flex items-center justify-center">
+                <i class="icon fas fa-school mr-2"></i>สุรธรรมพิทักษ์
+            </p>
+        </div>
+
+        <!-- Footer / Touhou flavor text -->
+        <p class="text-sm text-gray-600 mt-6 italic">
+            "ในดินแดนแห่งจินตนาการ ที่เวทมนตร์และเรื่องราวพันผสาน..."
+        </p>
+    </div>
+</body>
+</html>
