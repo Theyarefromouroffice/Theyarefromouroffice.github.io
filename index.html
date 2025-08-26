@@ -3,108 +3,381 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>โปรไฟล์ของ อภิวิชญ์ | Touhou Style</title>
+    <title>[L.C.B. PERSONNEL] อภิวิชญ์ ยันจะโปะ - Sinner Profile</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            /* Touhou-inspired background - celestial/magical feel */
-            background: linear-gradient(135deg, #1a2a6c 0%, #b21f1f 50%, #fdbb2d 100%); /* Deep blues, reds, and golden hues */
-            background-size: cover;
+            /* Limbus Company-inspired background: very dark, industrial, subtle red glow */
+            background: linear-gradient(135deg, #0d0d0d 0%, #1a1a1a 50%, #0d0d0d 100%);
+            background-size: 300% 300%;
             background-attachment: fixed;
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
+            animation: gradientShift 25s ease infinite alternate; /* Slower, shifting dark gradient */
+            color: #EFEFEF; /* Default light gray text color */
         }
-        .profile-card {
-            background-color: rgba(255, 255, 255, 0.95); /* Slightly transparent white for a dreamy effect */
-            backdrop-filter: blur(10px); /* Frosted glass effect */
-            border: 2px solid rgba(255, 255, 255, 0.7); /* Lighter border */
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3); /* Softer shadow */
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
+
+        .container-wrapper {
+            background-color: rgba(15, 15, 15, 0.98); /* Very dark background for the main container */
+            backdrop-filter: blur(5px); /* Less blur for a sharper feel */
+            border: 2px solid rgba(40, 40, 40, 0.9); /* Dark metallic border */
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.7); /* Deep, strong shadow */
+            max-width: 5xl;
+            width: 100%;
+            height: 90vh; /* Fixed height for an app-like feel */
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            position: relative;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInRise 1.2s ease-out forwards;
+            animation-delay: 0.5s;
+        }
+        @keyframes fadeInRise {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .navbar {
+            background-color: #0a0a0a; /* Even darker navbar */
+            border-bottom: 1px solid #333;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.6);
+            padding: 0.75rem 1rem;
+        }
+
+        .nav-button {
+            background: transparent;
+            color: #a0a0a0;
+            padding: 0.6rem 1rem;
+            border-radius: 0; /* Sharp corners */
+            font-weight: 600;
+            transition: all 0.2s ease;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            border-bottom: 2px solid transparent; /* For active indicator */
+        }
+        .nav-button:hover {
+            color: #d82d2d; /* Limbus red on hover */
+            background-color: rgba(216, 45, 45, 0.1);
+        }
+        .nav-button.active {
+            color: #d82d2d; /* Limbus red */
+            background-color: rgba(216, 45, 45, 0.2);
+            border-bottom: 2px solid #d82d2d; /* Red indicator for active */
+        }
+        .nav-button i {
+            margin-right: 0.5rem;
+        }
+
+        .content-area {
+            flex-grow: 1;
+            padding: 1.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .profile-page {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: none;
+            opacity: 0;
+            transform: translateX(-30px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out; /* Slower transition */
+            background-color: rgba(20, 20, 20, 0.85); /* Darker page background */
+            padding: 2rem;
+            border-radius: 0.25rem; /* Slightly rounded corners */
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.5); /* Deeper inner shadow */
+            overflow-y: auto;
+        }
+
+        .profile-page.active {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            opacity: 1;
+            transform: translateX(0);
+        }
+
         .profile-image {
-            border: 3px solid #6a0dad; /* Purple border for magic touch */
-            box-shadow: 0 0 15px rgba(106, 13, 173, 0.6); /* Glowing effect */
+            border: 3px solid #d82d2d; /* Limbus red accent border */
+            box-shadow: 0 0 20px rgba(216, 45, 45, 0.8); /* Stronger pulsating glow */
+            animation: pulseGlow 2.5s infinite alternate; /* Slower, more deliberate pulse */
         }
-        .gradient-text {
-            background: linear-gradient(45deg, #8a2be2, #da70d6); /* Violet to Orchid gradient */
+        @keyframes pulseGlow {
+            0% {
+                box-shadow: 0 0 20px rgba(216, 45, 45, 0.8);
+            }
+            100% {
+                box-shadow: 0 0 35px rgba(216, 45, 45, 1);
+            }
+        }
+
+        .limbus-red-text {
+            color: #d82d2d; /* Limbus red */
+        }
+        .limbus-gradient-text {
+            background: linear-gradient(45deg, #d82d2d, #ff6666); /* Red to lighter red gradient */
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
-        /* Custom Touhou-like button style for interactive elements if any were added */
-        .touhou-button {
-            background: linear-gradient(to right, #6a0dad, #9370db);
-            color: white;
-            padding: 0.75rem 1.5rem;
-            border-radius: 9999px; /* Fully rounded */
-            font-weight: 600;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(106, 13, 173, 0.4);
-        }
-        .touhou-button:hover {
-            background: linear-gradient(to right, #9370db, #6a0dad);
-            box-shadow: 0 6px 20px rgba(106, 13, 173, 0.6);
-            transform: translateY(-2px);
-        }
-        /* Icons styling */
+        /* Icon styling with Limbus red accent color */
         .icon {
-            color: #6a0dad; /* Touhou purple */
+            color: #d82d2d;
+            margin-right: 0.75rem;
+        }
+        /* Subtle glitch effect for section titles */
+        .glitch-text {
+            position: relative;
+        }
+        .glitch-text::before,
+        .glitch-text::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        .glitch-text::before {
+            left: 2px;
+            text-shadow: -2px 0 #00f;
+            background: rgba(255, 255, 255, 0.01);
+            animation: glitch-anim 2s infinite linear alternate-reverse;
+            clip-path: inset(var(--clip-top) 0 var(--clip-bottom) 0);
+        }
+        .glitch-text::after {
+            left: -2px;
+            text-shadow: -2px 0 #f00;
+            background: rgba(255, 255, 255, 0.01);
+            animation: glitch-anim2 3s infinite linear alternate-reverse;
+            clip-path: inset(var(--clip-top) 0 var(--clip-bottom) 0);
+        }
+        @keyframes glitch-anim {
+            0% {
+                clip-path: inset(5% 0 85% 0);
+            }
+            20% {
+                clip-path: inset(25% 0 65% 0);
+            }
+            40% {
+                clip-path: inset(80% 0 5% 0);
+            }
+            60% {
+                clip-path: inset(10% 0 70% 0);
+            }
+            80% {
+                clip-path: inset(45% 0 35% 0);
+            }
+            100% {
+                clip-path: inset(90% 0 1% 0);
+            }
+        }
+        @keyframes glitch-anim2 {
+            0% {
+                clip-path: inset(20% 0 70% 0);
+            }
+            25% {
+                clip-path: inset(60% 0 10% 0);
+            }
+            50% {
+                clip-path: inset(5% 0 85% 0);
+            }
+            75% {
+                clip-path: inset(70% 0 20% 0);
+            }
+            100% {
+                clip-path: inset(15% 0 75% 0);
+            }
+        }
+
+        .separator {
+            background-color: #444; /* Darker gray separator */
+            box-shadow: 0 0 8px rgba(216, 45, 45, 0.5); /* Subtle red glow */
+        }
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .container-wrapper {
+                height: auto;
+                min-height: 90vh;
+                margin-top: 1rem;
+                margin-bottom: 1rem;
+            }
+            .navbar {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 0.5rem;
+            }
+            .nav-button {
+                flex-grow: 1;
+                justify-content: center;
+                font-size: 0.875rem;
+                padding: 0.75rem 0.5rem;
+            }
+            .nav-button i {
+                margin-right: 0.25rem;
+            }
+            .profile-page {
+                padding: 1rem;
+            }
+            h1 { font-size: 2.5rem; }
+            h2 { font-size: 1.75rem; }
+            p, li { font-size: 1rem; }
         }
     </style>
     <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" xintegrity="sha512-Fo3rlrZj/k7ujTnHg4CGR2D7kSs0v4LLanw2qksYuRlEzO+tcaEPQogQ0KaoIF2ra/uLZtl5F5D+QpU/t/L3gQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 <body class="p-4 sm:p-6 md:p-8">
-    <div class="profile-card max-w-lg w-full p-6 sm:p-8 md:p-10 rounded-3xl flex flex-col items-center text-center space-y-6">
-        <!-- Profile Image -->
-        <div class="relative">
-            <img src="https://placehold.co/150x150/8a2be2/ffffff?text=อภิวิชญ์" alt="รูปโปรไฟล์ อภิวิชญ์" class="profile-image w-32 h-32 rounded-full object-cover">
-            <span class="absolute bottom-0 right-0 bg-green-500 rounded-full w-6 h-6 flex items-center justify-center text-white text-xs font-bold border-2 border-white">
-                <i class="fas fa-magic"></i> <!-- Little magic icon for Touhou touch -->
-            </span>
+    <div class="container-wrapper rounded-md">
+        <!-- Navigation Bar (Sinner Data Modules) -->
+        <nav class="navbar flex justify-center space-x-2 sm:space-x-4">
+            <button class="nav-button active" data-page="page1"><i class="fas fa-user-tag"></i> Sinner Record</button>
+            <button class="nav-button" data-page="page2"><i class="fas fa-brain"></i> Cognition Analysis</button>
+            <button class="nav-button" data-page="page3"><i class="fas fa-school"></i> Institutional Trace</button>
+            <button class="nav-button" data-page="page4"><i class="fas fa-gamepad"></i> Temporal Log</button>
+            <button class="nav-button" data-page="page5"><i class="fas fa-satellite-dish"></i> External Nexus</button>
+        </nav>
+
+        <!-- Content Area -->
+        <div class="content-area">
+            <!-- Page 1: Sinner Record -->
+            <div id="page1" class="profile-page active space-y-6">
+                <h2 class="text-3xl sm:text-4xl font-bold limbus-gradient-text mb-4 glitch-text" data-text="Sinner Record">[S.R.001] Sinner Record</h2>
+                <img src="https://placehold.co/150x150/d82d2d/ffffff?text=Sinner" alt="Sinner อภิวิชญ์" class="profile-image w-32 h-32 rounded-full object-cover mb-4">
+                <div class="text-center">
+                    <h1 class="text-4xl sm:text-5xl font-extrabold limbus-gradient-text leading-tight">อภิวิชญ์ ยันจะโปะ</h1>
+                    <p class="text-xl sm:text-2xl text-gray-400 mt-1">Designation: <span class="font-semibold limbus-red-text">ภูมิ</span></p>
+                    <p class="text-md sm:text-lg text-gray-500 mt-4 italic">"ข้อมูลบาปที่ถูกรวบรวม... การเดินทางเริ่มต้นขึ้นแล้ว."</p>
+                </div>
+            </div>
+
+            <!-- Page 2: Cognition Analysis -->
+            <div id="page2" class="profile-page space-y-6">
+                <h2 class="text-3xl sm:text-4xl font-bold limbus-gradient-text mb-4 glitch-text" data-text="Cognition Analysis">[C.A.002] Cognition Analysis</h2>
+                <div class="space-y-4 w-full max-w-md">
+                    <div class="bg-gray-900 p-4 rounded-md flex items-center justify-between shadow-md border border-gray-700 hover:border-limbus-red-text transition-all">
+                        <span class="text-lg sm:text-xl text-gray-200 flex items-center"><i class="icon fas fa-notes-medical mr-3"></i> การแพทย์ (Medical Doctrine Application)</span>
+                        <span class="limbus-red-text">STATUS: Engaged</span>
+                    </div>
+                    <div class="bg-gray-900 p-4 rounded-md flex items-center justify-between shadow-md border border-gray-700 hover:border-limbus-red-text transition-all">
+                        <span class="text-lg sm:text-xl text-gray-200 flex items-center"><i class="icon fas fa-comments mr-3"></i> ชอบพูดอังกฤษ (Linguistic Protocol: EN)</span>
+                        <span class="limbus-red-text">STATUS: Active</span>
+                    </div>
+                    <div class="bg-gray-900 p-4 rounded-md flex items-center justify-between shadow-md border border-gray-700 hover:border-limbus-red-text transition-all">
+                        <span class="text-lg sm:text-xl text-gray-200 flex items-center"><i class="icon fas fa-gamepad mr-3"></i> เล่นเกม (Digital Recreation Module)</span>
+                        <span class="limbus-red-text">STATUS: Operational</span>
+                    </div>
+                </div>
+                <p class="text-sm text-gray-500 mt-6 italic">"รูปแบบความคิดบ่งชี้ถึงศักยภาพที่ยังไม่ถูกปลดล็อก."</p>
+            </div>
+
+            <!-- Page 3: Institutional Trace -->
+            <div id="page3" class="profile-page space-y-6">
+                <h2 class="text-3xl sm:text-4xl font-bold limbus-gradient-text mb-4 glitch-text" data-text="Institutional Trace">[I.T.003] Institutional Trace</h2>
+                <div class="bg-gray-900 p-6 rounded-md w-full max-w-md shadow-md border border-gray-700">
+                    <p class="text-xl sm:text-2xl text-gray-200 flex items-center mb-2">
+                        <i class="icon fas fa-university mr-3"></i> Affiliation: สุรธรรมพิทักษ์ (Surathamphithak)
+                    </p>
+                    <p class="text-lg text-gray-400">
+                        Sector: Educational & Development<br>
+                        Status: Primary Enrollment Verified
+                    </p>
+                </div>
+                <p class="text-sm text-gray-500 mt-6 italic">"ทุกประวัติการศึกษาคือบันทึกแห่งการปรับตัว."</p>
+            </div>
+
+            <!-- Page 4: Temporal Log -->
+            <div id="page4" class="profile-page space-y-6">
+                <h2 class="text-3xl sm:text-4xl font-bold limbus-gradient-text mb-4 glitch-text" data-text="Temporal Log">[T.L.004] Temporal Log</h2>
+                <div class="space-y-4 w-full max-w-md">
+                    <div class="bg-gray-900 p-4 rounded-md flex items-center justify-between shadow-md border border-gray-700 hover:border-limbus-red-text transition-all">
+                        <span class="text-lg sm:text-xl text-gray-200 flex items-center"><i class="icon fas fa-desktop mr-3"></i> Digital Reality Engagement</span>
+                        <span class="limbus-red-text">PRIORITY: High</span>
+                    </div>
+                    <div class="bg-gray-900 p-4 rounded-md flex items-center justify-between shadow-md border border-gray-700 hover:border-limbus-red-text transition-all">
+                        <span class="text-lg sm:text-xl text-gray-200 flex items-center"><i class="icon fas fa-code-branch mr-3"></i> System Integration Protocols</span>
+                        <span class="limbus-red-text">LEVEL: Intermediate</span>
+                    </div>
+                </div>
+                <p class="text-sm text-gray-500 mt-6 italic">"กิจกรรมที่บันทึกไว้ถูกใช้เพื่อปรับปรุงประสิทธิภาพของ Sinner."</p>
+            </div>
+
+            <!-- Page 5: External Nexus -->
+            <div id="page5" class="profile-page space-y-6">
+                <h2 class="text-3xl sm:text-4xl font-bold limbus-gradient-text mb-4 glitch-text" data-text="External Nexus">[E.N.005] External Nexus</h2>
+                <div class="bg-gray-900 p-6 rounded-md w-full max-w-md shadow-md border border-gray-700">
+                    <p class="text-xl sm:text-2xl text-gray-200 flex items-center mb-2">
+                        <i class="icon fas fa-ban mr-3"></i> Communication Protocol: <span class="limbus-red-text">RESTRICTED</span>
+                    </p>
+                    <p class="text-lg text-gray-400">
+                        Status: Connection to Outer World Servers <span class="limbus-red-text">DENIED</span><br>
+                        Reason: Maintain Sinner Compliance
+                    </p>
+                </div>
+                <p class="text-sm text-gray-500 mt-6 italic">"โปรดทราบ: การเชื่อมต่อภายนอกอาจนำไปสู่ Distortion."</p>
+            </div>
         </div>
-
-        <!-- Name and Nickname -->
-        <div>
-            <h1 class="text-4xl sm:text-5xl font-extrabold gradient-text leading-tight">อภิวิชญ์ ยันจะโปะ</h1>
-            <p class="text-xl sm:text-2xl text-gray-700 mt-1">ชื่อเล่น: <span class="font-semibold text-purple-700">ภูมิ</span></p>
-        </div>
-
-        <!-- Section Separator -->
-        <div class="w-24 h-1 bg-purple-300 rounded-full my-4"></div>
-
-        <!-- Interests -->
-        <div class="space-y-3 w-full">
-            <h2 class="text-2xl sm:text-3xl font-bold text-gray-800 flex items-center justify-center">
-                <i class="icon fas fa-star mr-3"></i>ความสนใจ
-            </h2>
-            <ul class="text-lg sm:text-xl text-gray-700 space-y-2">
-                <li class="flex items-center justify-center"><i class="icon fas fa-notes-medical mr-2"></i>การแพทย์</li>
-                <li class="flex items-center justify-center"><i class="icon fas fa-comments mr-2"></i>ชอบพูดอังกฤษ</li>
-                <li class="flex items-center justify-center"><i class="icon fas fa-gamepad mr-2"></i>เล่นเกม</li>
-            </ul>
-        </div>
-
-        <!-- Section Separator -->
-        <div class="w-24 h-1 bg-purple-300 rounded-full my-4"></div>
-
-        <!-- Education -->
-        <div class="space-y-3 w-full">
-            <h2 class="text-2xl sm:text-3xl font-bold text-gray-800 flex items-center justify-center">
-                <i class="icon fas fa-hat-wizard mr-3"></i>การศึกษา
-            </h2>
-            <p class="text-lg sm:text-xl text-gray-700 flex items-center justify-center">
-                <i class="icon fas fa-school mr-2"></i>สุรธรรมพิทักษ์
-            </p>
-        </div>
-
-        <!-- Footer / Touhou flavor text -->
-        <p class="text-sm text-gray-600 mt-6 italic">
-            "ในดินแดนแห่งจินตนาการ ที่เวทมนตร์และเรื่องราวพันผสาน..."
-        </p>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const navButtons = document.querySelectorAll('.nav-button');
+            const profilePages = document.querySelectorAll('.profile-page');
+
+            function showPage(pageId) {
+                navButtons.forEach(button => button.classList.remove('active'));
+                profilePages.forEach(page => {
+                    page.classList.remove('active');
+                    page.style.transform = 'translateX(-30px)';
+                    page.style.opacity = '0';
+                });
+
+                const activeButton = document.querySelector(`.nav-button[data-page="${pageId}"]`);
+                if (activeButton) {
+                    activeButton.classList.add('active');
+                }
+
+                const currentPage = document.getElementById(pageId);
+                if (currentPage) {
+                    currentPage.style.display = 'flex';
+                    void currentPage.offsetWidth; // Trigger reflow
+                    currentPage.classList.add('active');
+                }
+            }
+
+            navButtons.forEach(button => {
+                button.addEventListener('click', (event) => {
+                    const pageId = event.currentTarget.dataset.page;
+                    showPage(pageId);
+                });
+            });
+
+            // Initially show the first page
+            showPage('page1');
+        });
+    </script>
 </body>
 </html>
