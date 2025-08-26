@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Turn-Based Strategy Game</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap');
+        
+        body {
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
+            font-family: 'Orbitron', monospace;
+            overflow: hidden;
+            color: #fff;
+        }
+        
+        #gameContainer {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        #companyName {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            color: #00ffff;
+            font-size: 14px;
+            font-weight: 700;
+            text-shadow: 0 0 10px #00ffff;
+            z-index: 1000;
+            letter-spacing: 1px;
+        }
+        
+        #gameTitle {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: #ffaa00;
+            font-size: 24px;
+            font-weight: 900;
+            text-shadow: 0 0 15px #ffaa00;
+            z-index: 1000;
+        }
+        
+        #gameBoard {
+            flex: 1;
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            grid-template-rows: repeat(8, 1fr);
+            gap: 2px;
+            padding: 80px 20px 20px 20px;
+            max-width: 600px;
+            max-height: 600px;
+            margin: auto;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            border: 2px solid #00ffff;
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+        }
+        
+        .tile {
+            background: #2a2a4a;
+            border: 1px solid #444;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+        
+        .tile:hover {
+            background: #3a3a5a;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+        }
+        
+        .tile.highlighted {
+            background: #ffaa00;
+            box-shadow: 0 0 20px rgba(255, 170, 0, 0.5);
+        }
+        
+        .tile.selected {
+            background: #00ff00;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.5);
+        }
+        
+        .tile.attackable {
+            background: #ff4444;
+            box-shadow: 0 0 20px rgba(255, 68, 68, 0.5);
+        }
+        
+        .unit {
+            width: 80%;
+            height: 80%;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 18px;
+            text-shadow: 0 0 5px rgba(0, 0, 0, 0.8);
+            position: relative;
+        }
+        
+        .player-unit {
+            background: linear-gradient(135deg, #00ff88, #00aa55);
+            border: 2px solid #00ff88;
+            color: #000;
+        }
+        
+        .ai-unit {
+            background: linear-gradient(135deg, #ff4444, #aa2222);
+            border: 2px solid #ff4444;
+            color: #fff;
+        }
+        
+        .unit::after {
+            content: attr(data-hp);
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #000;
+            color: #fff;
+            font-size: 10px;
+            padding: 2px 4px;
+            border-radius: 8px;
+            border: 1px solid #fff;
+            min-width: 12px;
+            text-align: center;
+        }
+        
+        #sidebar {
+            position: fixed;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 200px;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 20px;
+            border-radius: 10px;
+            border: 2px solid #00ffff;
+            color: #00ffff;
+        }
+        
+        #turnInfo {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        
+        .current-player {
+            color: #ffaa00;
+            text-shadow: 0 0 10px #ffaa00;
+        }
+        
+        #unitInfo {
+            margin-bottom: 20px;
+        }
+        
+        #actionButtons {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .action-btn {
+            background: transparent;
+            border: 2px solid #00ffff;
+            color: #00ffff;
+            padding: 10px;
+            cursor: pointer;
+            border-radius: 5px;
+            font-family: 'Orbitron', monospace;
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
+        
+        .action-btn:hover {
+            background: #00ffff;
+            color: #000;
+            box-shadow: 0 0 15px #00ffff;
+        }
+        
+        .action-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        #startScreen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            color: #00ffff;
+            text-align: center;
+        }
+        
+        #startScreen h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+            text-shadow: 0 0 20px #00ffff;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+        
+        @keyframes glow {
+            from { text-shadow: 0 0 20px #00ffff; }
+            to { text-shadow: 0 0 30px #00ffff, 0 0 40px #00ffff; }
+        }
+        
+        #startBtn {
+            padding: 15px 30px;
+            font-size: 20px;
+            background: transparent;
+            border: 2px solid #00ffff;
+            color: #00ffff;
+            cursor: pointer;
+            font-family: 'Orbitron', monospace;
+            transition: all 0.3s ease;
+        }
+        
+        #startBtn:hover {
+            background: #00ffff;
+            color: #000;
+            box-shadow: 0 0 20px #00ffff;
+        }
+        
+        .damage-text {
+            position: absolute;
+            font-size: 20px;
+            font-weight: bold;
+            color: #ff0000;
+            text-shadow: 0 0 10px #ff0000;
+            animation: damageFloat 1s ease-out forwards;
+            pointer-events: none;
+            z-index: 1000;
+        }
+        
+        @keyframes damageFloat {
+            0% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="gameContainer">
+        <div id="companyName">APIWIT YANJAPOH CORPORATION</div>
+        <div id="gameTitle">TACTICAL COMBAT</div>
+        
+        <div id="gameBoard"></div>
+        
+        <div id="sidebar">
+            <div id="turnInfo">
+                <div>Turn: <span id="turnCounter">1</span></div>
+                <div class="current-player" id="currentPlayer">Player Turn</div>
+            </div>
+            
+            <div id="unitInfo">
+                <div>Selected Unit:</div>
+                <div id="selectedUnitInfo">None</div>
+            </div>
+            
+            <div id="actionButtons">
+                <button class="action-btn" id="moveBtn">Move</button>
+                <button class="action-btn" id="attackBtn">Attack</button>
+                <button class="action-btn" id="endTurnBtn">End Turn</button>
+            </div>
+        </div>
+        
+        <div id="startScreen">
+            <h1>TACTICAL COMBAT</h1>
+            <p>Turn-based strategy game</p>
+            <p>Click units to select, then choose actions</p>
+            <p>Eliminate all enemy units to win!</p>
+            <button id="startBtn">START BATTLE</button>
+        </div>
+    </div>
+
+    <script>
+        let gameState = {
+            currentPlayer: 'player', // 'player' or 'ai'
+            turnCounter: 1,
+            selectedUnit: null,
+            mode: 'select', // 'select', 'move', 'attack'
+            units: [],
+            board: Array(8).fill().map(() => Array(8).fill(null)),
+            gameRunning: false
+        };
+
+        const gameBoard = document.getElementById('gameBoard');
+        const startScreen = document.getElementById('startScreen');
+        const startBtn = document.getElementById('startBtn');
+        const turnCounter = document.getElementById('turnCounter');
+        const currentPlayer = document.getElementById('currentPlayer');
+        const selectedUnitInfo = document.getElementById('selectedUnitInfo');
+        const moveBtn = document.getElementById('moveBtn');
+        const attackBtn = document.getElementById('attackBtn');
+        const endTurnBtn = document.getElementById('endTurnBtn');
+
+        startBtn.addEventListener('click', startGame);
+        moveBtn.addEventListener('click', () => setMode('move'));
+        attackBtn.addEventListener('click', () => setMode('attack'));
+        endTurnBtn.addEventListener('click', endTurn);
+
+        function startGame() {
+            startScreen.style.display = 'none';
+            gameState.gameRunning = true;
+            initializeBoard();
+            initializeUnits();
+            updateUI();
+        }
+
+        function initializeBoard() {
+            gameBoard.innerHTML = '';
+            
+            for (let row = 0; row < 8; row++) {
+                for (let col = 0; col < 8; col++) {
+                    const tile = document.createElement('div');
+                    tile.className = 'tile';
+                    tile.dataset.row = row;
+                    tile.dataset.col = col;
+                    tile.addEventListener('click', () => handleTileClick(row, col));
+                    gameBoard.appendChild(tile);
+                }
+            }
+        }
+
+        function initializeUnits() {
+            // Player units (bottom)
+            const playerPositions = [
+                [6, 1], [6, 3], [6, 5],
+                [7, 0], [7, 2], [7, 4], [7, 6]
+            ];
+
+            // AI units (top)
+            const aiPositions = [
+                [0, 1], [0, 3], [0, 5],
+                [1, 0], [1, 2], [1, 4], [1, 6]
+            ];
+
+            gameState.units = [];
+            gameState.board = Array(8).fill().map(() => Array(8).fill(null));
+
+            playerPositions.forEach(([row, col], index) => {
+                const unit = {
+                    id: `player_${index}`,
+                    type: 'player',
+                    row, col,
+                    hp: 3,
+                    maxHp: 3,
+                    attack: 2,
+                    moved: false,
+                    attacked: false
+                };
+                gameState.units.push(unit);
+                gameState.board[row][col] = unit;
+            });
+
+            aiPositions.forEach(([row, col], index) => {
+                const unit = {
+                    id: `ai_${index}`,
+                    type: 'ai',
+                    row, col,
+                    hp: 3,
+                    maxHp: 3,
+                    attack: 2,
+                    moved: false,
+                    attacked: false
+                };
+                gameState.units.push(unit);
+                gameState.board[row][col] = unit;
+            });
+
+            renderUnits();
+        }
+
+        function renderUnits() {
+            // Clear all units from tiles
+            document.querySelectorAll('.unit').forEach(unit => unit.remove());
+
+            gameState.units.forEach(unit => {
+                if (unit.hp > 0) {
+                    const tile = document.querySelector(`[data-row="${unit.row}"][data-col="${unit.col}"]`);
+                    const unitElement = document.createElement('div');
+                    unitElement.className = `unit ${unit.type}-unit`;
+                    unitElement.dataset.hp = unit.hp;
+                    unitElement.textContent = unit.type === 'player' ? '♦' : '♠';
+                    tile.appendChild(unitElement);
+                }
+            });
+        }
+
+        function handleTileClick(row, col) {
+            if (!gameState.gameRunning) return;
+
+            if (gameState.mode === 'select') {
+                const unit = gameState.board[row][col];
+                if (unit && unit.type === gameState.currentPlayer) {
+                    selectUnit(unit);
+                }
+            } else if (gameState.mode === 'move') {
+                if (gameState.selectedUnit && canMoveTo(gameState.selectedUnit, row, col)) {
+                    moveUnit(gameState.selectedUnit, row, col);
+                }
+            } else if (gameState.mode === 'attack') {
+                if (gameState.selectedUnit && canAttack(gameState.selectedUnit, row, col)) {
+                    attackUnit(gameState.selectedUnit, row, col);
+                }
+            }
+        }
+
+        function selectUnit(unit) {
+            gameState.selectedUnit = unit;
+            gameState.mode = 'select';
+            clearHighlights();
+            
+            const tile = document.querySelector(`[data-row="${unit.row}"][data-col="${unit.col}"]`);
+            tile.classList.add('selected');
+            
+            updateUI();
+        }
+
+        function setMode(mode) {
+            if (!gameState.selectedUnit) return;
+            
+            gameState.mode = mode;
+            clearHighlights();
+            
+            if (mode === 'move') {
+                highlightMovablePositions();
+            } else if (mode === 'attack') {
+                highlightAttackablePositions();
+            }
+        }
+
+        function highlightMovablePositions() {
+            if (!gameState.selectedUnit || gameState.selectedUnit.moved) return;
+
+            const unit = gameState.selectedUnit;
+            for (let row = 0; row < 8; row++) {
+                for (let col = 0; col < 8; col++) {
+                    if (canMoveTo(unit, row, col)) {
+                        const tile = document.querySelector(`[data-row="${row}"][data-col="${col}"]`);
+                        tile.classList.add('highlighted');
+                    }
+                }
+            }
+        }
+
+        function highlightAttackablePositions() {
+            if (!gameState.selectedUnit || gameState.selectedUnit.attacked) return;
+
+            const unit = gameState.selectedUnit;
+            for (let row = 0; row < 8; row++) {
+                for (let col = 0; col < 8; col++) {
+                    if (canAttack(unit, row, col)) {
+                        const tile = document.querySelector(`[data-row="${row}"][data-col="${col}"]`);
+                        tile.classList.add('attackable');
+                    }
+                }
+            }
+        }
+
+        function canMoveTo(unit, row, col) {
+            if (unit.moved) return false;
+            if (gameState.board[row][col]) return false;
+            
+            const distance = Math.abs(unit.row - row) + Math.abs(unit.col - col);
+            return distance <= 2;
+        }
+
+        function canAttack(unit, row, col) {
+            if (unit.attacked) return false;
+            
+            const target = gameState.board[row][col];
+            if (!target || target.type === unit.type) return false;
+            
+            const distance = Math.abs(unit.row - row) + Math.abs(unit.col - col);
+            return distance <= 2;
+        }
+
+        function moveUnit(unit, row, col) {
+            gameState.board[unit.row][unit.col] = null;
+            unit.row = row;
+            unit.col = col;
+            unit.moved = true;
+            gameState.board[row][col] = unit;
+            
+            renderUnits();
+            gameState.mode = 'select';
+            clearHighlights();
+            updateUI();
+        }
+
+        function attackUnit(attacker, row, col) {
+            const target = gameState.board[row][col];
+            if (!target) return;
+
+            const damage = attacker.attack;
+            target.hp -= damage;
+            attacker.attacked = true;
+
+            // Show damage text
+            showDamageText(row, col, damage);
+
+            if (target.hp <= 0) {
+                gameState.board[row][col] = null;
+                gameState.units = gameState.units.filter(u => u.id !== target.id);
+            }
+
+            renderUnits();
+            gameState.mode = 'select';
+            clearHighlights();
+            updateUI();
+
+            // Check win condition
+            checkWinCondition();
+        }
+
+        function showDamageText(row, col, damage) {
+            const tile = document.querySelector(`[data-row="${row}"][data-col="${col}"]`);
+            const rect = tile.getBoundingClientRect();
+            
+            const damageText = document.createElement('div');
+            damageText.className = 'damage-text';
+            damageText.textContent = `-${damage}`;
+            damageText.style.left = rect.left + rect.width / 2 + 'px';
+            damageText.style.top = rect.top + 'px';
+            
+            document.body.appendChild(damageText);
+            
+            setTimeout(() => damageText.remove(), 1000);
+        }
+
+        function clearHighlights() {
+            document.querySelectorAll('.tile').forEach(tile => {
+                tile.classList.remove('highlighted', 'selected', 'attackable');
+            });
+        }
+
+        function endTurn() {
+            gameState.currentPlayer = gameState.currentPlayer === 'player' ? 'ai' : 'player';
+            gameState.turnCounter++;
+            gameState.selectedUnit = null;
+            gameState.mode = 'select';
+            
+            // Reset unit actions
+            gameState.units.forEach(unit => {
+                if (unit.type === gameState.currentPlayer) {
+                    unit.moved = false;
+                    unit.attacked = false;
+                }
+            });
+
+            clearHighlights();
+            updateUI();
+
+            if (gameState.currentPlayer === 'ai') {
+                setTimeout(aiTurn, 1000);
+            }
+        }
+
+        function aiTurn() {
+            const aiUnits = gameState.units.filter(u => u.type === 'ai' && u.hp > 0);
+            
+            for (let unit of aiUnits) {
+                if (!unit.attacked) {
+                    // Try to attack
+                    const playerUnits = gameState.units.filter(u => u.type === 'player' && u.hp > 0);
+                    let attacked = false;
+                    
+                    for (let target of playerUnits) {
+                        if (canAttack(unit, target.row, target.col)) {
+                            attackUnit(unit, target.row, target.col);
+                            attacked = true;
+                            break;
+                        }
+                    }
+                }
+                
+                if (!unit.moved && !attacked) {
+                    // Try to move closer to player units
+                    const playerUnits = gameState.units.filter(u => u.type === 'player' && u.hp > 0);
+                    if (playerUnits.length > 0) {
+                        const target = playerUnits[0];
+                        const bestMove = findBestMove(unit, target);
+                        if (bestMove) {
+                            moveUnit(unit, bestMove.row, bestMove.col);
+                        }
+                    }
+                }
+            }
+            
+            setTimeout(() => {
+                endTurn();
+            }, 1000);
+        }
+
+        function findBestMove(unit, target) {
+            let bestMove = null;
+            let bestDistance = Infinity;
+            
+            for (let row = 0; row < 8; row++) {
+                for (let col = 0; col < 8; col++) {
+                    if (canMoveTo(unit, row, col)) {
+                        const distance = Math.abs(target.row - row) + Math.abs(target.col - col);
+                        if (distance < bestDistance) {
+                            bestDistance = distance;
+                            bestMove = { row, col };
+                        }
+                    }
+                }
+            }
+            
+            return bestMove;
+        }
+
+        function updateUI() {
+            turnCounter.textContent = gameState.turnCounter;
+            currentPlayer.textContent = gameState.currentPlayer === 'player' ? 'Player Turn' : 'AI Turn';
+            currentPlayer.style.color = gameState.currentPlayer === 'player' ? '#00ff88' : '#ff4444';
+            
+            if (gameState.selectedUnit) {
+                selectedUnitInfo.innerHTML = `
+                    Type: ${gameState.selectedUnit.type}<br>
+                    HP: ${gameState.selectedUnit.hp}/${gameState.selectedUnit.maxHp}<br>
+                    Moved: ${gameState.selectedUnit.moved ? 'Yes' : 'No'}<br>
+                    Attacked: ${gameState.selectedUnit.attacked ? 'Yes' : 'No'}
+                `;
+                
+                moveBtn.disabled = gameState.selectedUnit.moved || gameState.currentPlayer !== 'player';
+                attackBtn.disabled = gameState.selectedUnit.attacked || gameState.currentPlayer !== 'player';
+            } else {
+                selectedUnitInfo.textContent = 'None';
+                moveBtn.disabled = true;
+                attackBtn.disabled = true;
+            }
+            
+            endTurnBtn.disabled = gameState.currentPlayer !== 'player';
+        }
+
+        function checkWinCondition() {
+            const playerUnits = gameState.units.filter(u => u.type === 'player' && u.hp > 0);
+            const aiUnits = gameState.units.filter(u => u.type === 'ai' && u.hp > 0);
+            
+            if (playerUnits.length === 0) {
+                alert('AI Wins! Game Over.');
+                gameState.gameRunning = false;
+            } else if (aiUnits.length === 0) {
+                alert('Player Wins! Congratulations!');
+                gameState.gameRunning = false;
+            }
+        }
+    </script>
+</body>
+</html>
